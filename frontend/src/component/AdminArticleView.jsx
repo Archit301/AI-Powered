@@ -20,8 +20,8 @@ const AdminArticleView = () => {
   const fetchArticle = async () => {
     try {
       const response = await axios.get(`/api/articles/${id}`);
-      console.log("hello")
       setArticle(response.data);
+      // console.log(article.likedBy.length)
     } catch (err) {
       setError('Error fetching article');
       console.error('Error fetching article:', err);
@@ -83,11 +83,11 @@ const AdminArticleView = () => {
           </div>
           <div className="flex items-center space-x-2 text-green-600">
             <FaThumbsUp />
-            <span>{article.upvotes}</span>
+            <span>{article.likedBy.length}</span>
           </div>
           <div className="flex items-center space-x-2 text-red-600">
             <FaThumbsDown />
-            <span>{article.downvotes}</span>
+            <span>{article.dislikedBy.length}</span>
           </div>
         </div>
 
@@ -132,9 +132,9 @@ const AdminArticleView = () => {
                 className="p-6 bg-gray-50 rounded-lg shadow-md transition hover:shadow-lg"
               >
                 <div className="flex items-center mb-2">
-                  <div className="font-semibold text-gray-800">{comment.user}</div>
+                  <div className="font-semibold text-gray-800">{comment.author.username}</div>
                 </div>
-                <p className="text-gray-600">{comment.comment}</p>
+                <p className="text-gray-600">{comment.content}</p>
               </div>
             ))
           ) : (

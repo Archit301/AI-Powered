@@ -15,7 +15,7 @@ export const addComment=async(req,res)=>{
 
 export const getCommentsByArticle = async (req, res) => {
     try {
-        const comments = await Comment.find({ article: req.params.articleId });
+        const comments = await Comment.find({ article: req.params.articleId }).populate('author');
     //    console.log("hello1")  
         res.status(200).json(comments);
     } catch (error) {
