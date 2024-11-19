@@ -1,5 +1,5 @@
 import express from "express"
-import { getFilteredArticles, getsavedarticle, getsavedarticlebyid, getUserProfile, savedArticle, unsavedArticle } from "../controller/profile_ccontroller.js";
+import { getFilteredArticles, getsavedarticle, getsavedarticlebyid, getUserProfile, savedArticle, topics, unsavedArticle } from "../controller/profile_ccontroller.js";
 
 const router=express.Router()
 
@@ -9,4 +9,5 @@ router.get('/:userId/saved-articles', getsavedarticle);
 router.put('/savearticle', savedArticle);
 router.put('/unsavearticle', unsavedArticle);
 router.get('/:userId/recommend',getFilteredArticles );
+router.get("/:topics/category",topics)
 export default router
