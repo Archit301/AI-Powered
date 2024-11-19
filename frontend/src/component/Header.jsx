@@ -38,6 +38,7 @@ function Header() {
           <a href="/questions" className="hover:text-gray-400 transition duration-200">Questions</a>
           <a href="/topics" className="hover:text-gray-400 transition duration-200">Topics</a>
           <a href="/authors" className="hover:text-gray-400 transition duration-200">Authors</a>
+          <a href="/saved" className="hover:text-gray-400 transition duration-200">Saved</a>
           <a href="/about" className="hover:text-gray-400 transition duration-200">About</a>
         </nav>
 
@@ -70,6 +71,7 @@ function Header() {
           <a href="/questions" className="text-white hover:text-gray-400 transition duration-200">Questions</a>
           <a href="/topics" className="text-white hover:text-gray-400 transition duration-200">Topics</a>
           <a href="/authors" className="text-white hover:text-gray-400 transition duration-200">Authors</a>
+          <a href="/saved" className="text-white hover:text-gray-400 transition duration-200">Saved</a>
           <a href="/about" className="text-white hover:text-gray-400 transition duration-200">About</a>
           <a href="/profile" className="text-white hover:text-gray-400 transition duration-200">Profile</a>
         </nav>

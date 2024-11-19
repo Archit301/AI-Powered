@@ -17,14 +17,16 @@ function ArticlePage() {
   const [translatedContent, setTranslatedContent] = useState("");
   const [isFollowed, setIsFollowed] = useState(false);
   const [showSentiment, setShowSentiment] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
   const articleId = window.location.pathname.split("/").pop();
-  const userId = currentUser ._id;
+  const userId = currentUser._id;
 
   useEffect(() => {
     fetchArticle();
     fetchViews();
     checkIfUserIsFollowed();
     fetchComments();
+    checkIfArticleIsSaved();
     fetchLikesDislikes();
   }, []);
 
@@ -38,6 +40,7 @@ function ArticlePage() {
       clearInterval(likesDislikesInterval);
     };
   }, []);
+
 
   const analyzeSentiment = async () => {
     if (!translatedContent) {
@@ -82,9 +85,33 @@ function ArticlePage() {
   const checkIfUserIsFollowed = async () => {
     try {
       const { data } = await axios.get(`/api/users/${articleId}/${userId}`);
-      setIsFollowed(data.message === "User  followed");
+      setIsFollowed(data.message === "User followed");
     } catch (error) {
       console.error("Error checking follow status:", error.message);
+    }
+  };
+
+
+
+  const checkIfArticleIsSaved = async () => {
+    try {
+      const { data } = await axios.get(`/api/profile/${articleId}/${currentUser._id}/savedarticlebyid`);
+      setIsSaved(data.saved); // Assuming the response has a `saved` field
+    } catch (error) {
+      console.error("Error checking saved status:", error.message);
+    }
+  };
+
+  const handleSave = async () => {
+    try {
+      if (isSaved) {
+        await  axios.put(`/api/profile/unsavearticle`, { userId,articleId });
+      } else {
+        await axios.put(`/api/profile/savearticle`, { userId,articleId });
+      }
+      setIsSaved(!isSaved);
+    } catch (error) {
+      console.error("Error saving/unsaving article:", error.message);
     }
   };
 
@@ -225,6 +252,14 @@ function ArticlePage() {
 </div>
 
         <div className="flex justify-between items-center py-4 px-6 bg-gray-100 rounded-lg shadow-md mx-4 sm:mx-0 mb-6">
+        <div className="flex justify-end mb-4">
+            <button
+              onClick={handleSave}
+              className={`px-4 py-2 rounded-md ${isSaved ? "bg-green-600 text-white" : "bg-gray-300 text-gray-800"} transition duration-200 hover:bg-green-500`}
+            >
+              {isSaved ? "Saved" : "Save"}
+            </button>
+          </div>
           <div className="flex space-x-4">
             <button
               onClick={handleLike}

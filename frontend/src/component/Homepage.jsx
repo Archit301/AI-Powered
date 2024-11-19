@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router";
+import { useSelector } from "react-redux";
 function Homepage() {
   const [latestArticles, setLatestArticles] = useState([]);
+  const {currentUser,error,loading}= useSelector((state)=>state.user)
+  const [recommendedArticles, setRecommendedArticles] = useState([]);
   const [newQuestions, setNewQuestions] = useState([]);
   const navigate=useNavigate()
   // Function to fetch latest articles
@@ -18,6 +21,22 @@ function Homepage() {
       }
     } catch (error) {
       console.error("Error fetching articles:", error);
+    }
+  };
+
+
+  const fetchRecommendedArticles = async () => {
+    if (!currentUser) return;
+    try {
+      const response = await fetch("/api/profile/6739065e9e3ba8f82b602960/recommend");
+      if (response.ok) {
+        const data = await response.json();
+        setRecommendedArticles(data);
+      } else {
+        console.error("Failed to fetch recommended articles.");
+      }
+    } catch (error) {
+      console.error("Error fetching recommended articles:", error);
     }
   };
 
@@ -39,6 +58,7 @@ function Homepage() {
   // Polling for articles and questions every 10 seconds
   useEffect(() => {
     fetchLatestArticles();
+    fetchRecommendedArticles()
     fetchNewQuestions();
     const interval = setInterval(() => {
       fetchLatestArticles();
@@ -60,7 +80,7 @@ function Homepage() {
       alert("hello")
       await axios.put(`/api/articles/view/${articleId}`);
       // Navigate to the article's detail page
-      navigate(`/article/${articleId}`);
+      navigate(`/article/${articleId}` );
     } catch (error) {
       console.error("Error updating views or navigating:", error);
     }
@@ -82,55 +102,75 @@ function Homepage() {
       </section>
 
       {/* Latest Articles Section */}
-      <section className="py-12 px-6 md:px-12 lg:px-24">
-        <h2 className="text-3xl font-semibold text-center mb-6">Latest Articles</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {latestArticles.length > 0 ? (
-          latestArticles.map((article) => (
-            <div key={article.id} className="bg-white shadow-md rounded-lg overflow-hidden">
-              <img
-                src={article.images[0] || "https://via.placeholder.com/400x200?text=Default+Image"}
-                alt={article.title || "Article Image"}
-                className="w-full h-48 object-cover"
-              />
-              <div className="p-6">
-                <h3 className="text-2xl font-semibold mb-2 truncate">{article.title || "Untitled Article"}</h3>
-                <p className="text-gray-600 mb-2 truncate">
-                  {article.summary || "No summary available."}
-                </p>
-                <p className="text-sm text-gray-500 mb-4">
-                  Author: {article.author.username || "Unknown Author"}
-                </p>
-                <button   onClick={() => handleReadMore(article._id)}
-                 className="text-blue-500 font-semibold hover:underline">Read more</button>
-              </div>
-            </div>
-          ))
-          ) : (
-            <p className="text-center text-gray-600">No articles available at the moment.</p>
-          )}
-        </div>
-      </section>
+     
 
-      {/* Popular Topics Section */}
-      <section className="bg-gray-50 py-12 px-6 md:px-12 lg:px-24">
-        <h2 className="text-3xl font-semibold text-center mb-6">Explore Popular Topics</h2>
-        <div className="flex flex-wrap justify-center gap-4 max-w-4xl mx-auto">
-          {["AI", "Technology", "Health", "Science", "Business"].map((topic) => (
-            <button
-              key={topic}
-              className="bg-blue-100 text-blue-600 py-2 px-4 rounded-lg hover:bg-blue-200 transition duration-200"
-            >
-              {topic}
+
+ <section className="py-12 px-6 md:px-12 lg:px-24">
+<h2 className="text-3xl font-semibold text-center mb-6">Latest Articles</h2>
+<div className="relative">
+  <div className="flex overflow-x-auto gap-4 snap-x snap-mandatory scroll-smooth">
+    {latestArticles.length > 0 ? (
+      latestArticles.map((article) => (
+        <div key={article.id} className="bg-white shadow-lg rounded-lg flex-none w-72 sm:w-80">
+          <img
+            src={article.images[0] || "https://via.placeholder.com/1200x500?text=Default+Image"}
+            alt={article.title || "Article Image"}
+            className="w-full h-40 object-cover"
+          />
+          <div className="p-4">
+            <h3 className="text-lg font-semibold mb-2 truncate">{article.title || "Untitled Article"}</h3>
+            <p className="text-gray-600 mb-2 truncate">{truncateText(article.summary || "", 15)}</p>
+            <button onClick={() => handleReadMore(article._id)} className="text-blue-500 font-semibold hover:underline">
+              Read more
             </button>
-          ))}
+          </div>
         </div>
-      </section>
+      ))
+    ) : (
+      <p className="text-center text-gray-600">No articles available at the moment.</p>
+    )}
+  </div>
+</div>
+</section>
+
+
+
+
+{currentUser && recommendedArticles.length > 0 && (
+    <section className="py-12 px-6 md:px-12 lg:px-24">
+    <h2 className="text-3xl font-semibold text-center mb-6">Recommended Articles for You</h2>
+    <div className="relative">
+      <div className="flex overflow-x-auto gap-4 snap-x snap-mandatory scroll-smooth">
+            {recommendedArticles.map((article) => (
+              <div key={article.id} className="bg-white shadow-lg rounded-lg w-72">
+                <img
+                  src={article.images[0] || "https://via.placeholder.com/1200x500?text=Default+Image"}
+                  alt={article.title || "Article Image"}
+                  className="w-full h-40 object-cover"
+                />
+                <div className="p-4">
+                  <h3 className="text-lg font-semibold mb-2 truncate">{article.title || "Untitled Article"}</h3>
+                  <p className="text-gray-600 mb-2 truncate">{truncateText(article.summary || "", 15)}</p>
+                  <button
+                    onClick={() => handleReadMore(article._id)}
+                    className="text-blue-500 font-semibold hover:underline"
+                  >
+                    Read more
+                  </button>
+                </div>
+              </div>
+            ))}
+            </div>
+          </div>
+        </section>
+      )}
+
 
       {/* Questions & Answers Section */}
       <section className="py-12 px-6 md:px-12 lg:px-24">
-        <h2 className="text-3xl font-semibold text-center mb-6">Questions & Answers</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+<h2 className="text-3xl font-semibold text-center mb-6">Explore Popular Question</h2>
+<div className="relative">
+  <div className="flex overflow-x-auto gap-4 snap-x snap-mandatory scroll-smooth">
           {newQuestions.length > 0 ? (
             newQuestions.map((question) => (
               <div key={question.id} className="bg-white shadow-md rounded-lg p-6">
@@ -144,6 +184,7 @@ function Homepage() {
           ) : (
             <p className="text-center text-gray-600">No questions available at the moment.</p>
           )}
+          </div>
         </div>
       </section>
 

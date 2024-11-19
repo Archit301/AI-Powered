@@ -26,6 +26,8 @@ import AdminEditQuestion from './component/AdminEditQuestion'
 import { useSelector } from 'react-redux'
 import ArticlePage from './component/ArticlePage'
 import Author from './component/Author'
+import AuthorProfile from './component/AuthorProfile'
+import SavedArticles from './component/SavedArticles'
 
 
 function App() {
@@ -41,7 +43,7 @@ function App() {
   currentUser?.role === "admin" ? <AdminHeader /> : <Header />}
            {/* <Header />  */}
    {/* <AdminHeader/> */}
-       <main className="flex-grow">
+        <main className="flex-grow"> 
     <Routes>
     <Route path='/articles' element={<ArticlesPage/>}/> 
     <Route path='/register' element={<Signup/>}/> 
@@ -51,6 +53,8 @@ function App() {
     <Route path='/topics' element={<TopicsPage/>}/> 
     <Route path='/about' element={<AboutSection/>}/> 
     <Route path='/profile' element={<ProfileSection/>}/> 
+    <Route path='/author/:id' element={<AuthorProfile/>}/> 
+    <Route path='/saved' element={<SavedArticles/>}/> 
     <Route path='/' element={<Homepage/>}/> 
     <Route path='/authors' element={<Author/>}/> 
     <Route path='/article/:id' element={<ArticlePage/>}/> 
@@ -65,7 +69,7 @@ function App() {
     <Route path='/adminarticleview/:id' element={<AdminArticleView/>}/> 
     <Route path='/createarticle' element={<CreateArticleForm/>}/> 
       </Routes>
-      </main>
+       </main> 
       </div>
     </BrowserRouter>
       

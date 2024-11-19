@@ -137,6 +137,7 @@ export const getUserProfile = async (req, res) => {
         const user = await User.findById(req.params.userId);
         res.status(200).json(user);
     } catch (error) {
+        console.log("hello")
         res.status(500).json({ error: 'Failed to get profile' });
     }
 };
@@ -195,5 +196,37 @@ export const getfollowuser = async (req, res) => {
         res.status(200).json({ message: 'User not followed' })   
     } catch (error) {
         res.status(500).json({ error: 'Failed to follow user' }); 
+    }
+}
+
+
+
+
+export const followedUser=async(req,res)=>{
+    try {
+     const {userId}=req.params;
+     const user = await User.findById(userId);
+     if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+      const followedUsersData = await User.find({
+        _id: { $in: user.followedUsers },
+      });
+  
+      res.status(200).json(followedUsersData);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed user' }); 
+    }
+}
+
+
+export const author=async(req,res)=>{
+    try {
+
+     const user=await User.find({role:"admin"})
+
+    res.status(200).json(user) 
+    } catch (error) {
+        res.status(500).json({ error: 'Failed user' }); 
     }
 }
