@@ -170,7 +170,7 @@ export const topics=async(req,res)=>{
   if(!article&&!question){
     return res.status(200).json("No data found")
   }
-  res.status(200).json*({article,question})
+  res.status(200).json({article,question})
     } catch (error) {
         res.status(500).json({ message: 'Internal server error' });
     
