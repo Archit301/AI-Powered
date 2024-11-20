@@ -110,14 +110,25 @@ res.status(200).json(articles);
 export const viewsarticle=async(req,res)=>{
     try {
         const articleId = req.params.id;
+        const currentMonth = new Date().toISOString().slice(0, 7);
         const updatedArticle = await Article.findByIdAndUpdate(
           articleId,
-          { $inc: { views: 1 } },
-          { new: true } 
+          { 
+            $inc: { views: 1 }, // Increment the total views by 1
+            $setOnInsert: { monthlyViews: [] } // Ensure monthlyViews array exists if the article is newly created
+        },
+        { new: true, upsert: true }
         );   
         if (!updatedArticle) {
           return res.status(404).json({ message: 'Article not found' });
         }   
+        const monthIndex = updatedArticle.monthlyViews.findIndex(mv => mv.month === currentMonth);
+        if (monthIndex !== -1) {
+            updatedArticle.monthlyViews[monthIndex].count += 1;
+        } else {
+            updatedArticle.monthlyViews.push({ month: currentMonth, count: 1 });
+        }
+        await updatedArticle.save();
         res.status(200).json(updatedArticle);
       } catch (error) {
         res.status(500).json({ message: 'Error updating views', error });
@@ -156,6 +167,17 @@ export const likeArticle = async (req, res) => {
     article.likedBy.push(userObjectId);
     article.upvotes += 1;
 
+    // Get current month in 'YYYY-MM' format
+    const currentMonth = new Date().toISOString().slice(0, 7);
+
+    // Update monthlyLikes for current month
+    const monthIndex = article.monthlyLikes.findIndex(item => item.month === currentMonth);
+    if (monthIndex >= 0) {
+      article.monthlyLikes[monthIndex].count += 1; // Increment like count for this month
+    } else {
+      article.monthlyLikes.push({ month: currentMonth, count: 1 }); // Add new entry for current month
+    }
+
     // Save changes
     await article.save();
 
@@ -172,37 +194,53 @@ export const likeArticle = async (req, res) => {
 export const dislikeArticle = async (req, res) => {
   const {userId} = req.body; 
   const { articleId } = req.params;
-
   try {
     // Find the article
     const article = await Article.findById(articleId);
 
     if (!article) {
-      return res.status(404).json({ message: 'Article not found' });
+      return res.status(404).json({ message: "Article not found" });
     }
 
+    // Convert userId to ObjectId if not already
+    const userObjectId = new mongoose.Types.ObjectId(userId);
+
     // Check if the user has already disliked the article
-    if (article.dislikedBy.includes(new mongoose.Types.ObjectId(userId))) {
-      return res.status(400).json({ message: 'You have already disliked this article' });
+    if (article.dislikedBy.includes(userObjectId)) {
+      return res.status(400).json({ message: "You have already disliked this article" });
     }
 
     // Remove user from likedBy array if they previously liked the article
-    if (article.likedBy.includes(new mongoose.Types.ObjectId(userId))) {
-      article.likedBy.pull(new mongoose.Types.ObjectId(userId));
+    if (article.likedBy.includes(userObjectId)) {
+      article.likedBy.pull(userObjectId);
       article.upvotes -= 1; // Decrease the upvotes count
     }
 
     // Add user to dislikedBy array and increment downvotes
-    article.dislikedBy.push(new mongoose.Types.ObjectId(userId));
+    article.dislikedBy.push(userObjectId);
     article.dislikes += 1;
+
+    // Get current month in 'YYYY-MM' format
+    const currentMonth = new Date().toISOString().slice(0, 7);
+
+    // Update monthlyDislikes for current month
+    const monthIndex = article.monthlyDislikes.findIndex(item => item.month === currentMonth);
+    if (monthIndex >= 0) {
+      article.monthlyDislikes[monthIndex].count += 1; // Increment dislike count for this month
+    } else {
+      article.monthlyDislikes.push({ month: currentMonth, count: 1 }); // Add new entry for current month
+    }
 
     // Save the article with updated like and dislike data
     await article.save();
 
-    return res.status(200).json({ message: 'Article disliked successfully', article });
+    return res.status(200).json({
+      message: "Article disliked successfully",
+      article,
+    });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: 'Server error' });
+    return res.status(500).json({ message: "Server error" });
   }
 };
 

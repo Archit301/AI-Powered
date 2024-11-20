@@ -28,6 +28,8 @@ import ArticlePage from './component/ArticlePage'
 import Author from './component/Author'
 import AuthorProfile from './component/AuthorProfile'
 import SavedArticles from './component/SavedArticles'
+import QuestionView from './component/QuestionView'
+import Insight from './component/Insight'
 
 
 function App() {
@@ -50,6 +52,7 @@ function App() {
     <Route path='/login' element={<Login/>}/> 
     <Route path='/detailed' element={<ArticleDetailPage/>}/>
     <Route path='/questions' element={<QuestionPage/>}/>  
+    <Route path='/question/:id' element={<QuestionView/>}/> 
     <Route path='/topics' element={<TopicsPage/>}/> 
     <Route path='/about' element={<AboutSection/>}/> 
     <Route path='/profile' element={<ProfileSection/>}/> 
@@ -62,6 +65,7 @@ function App() {
     <Route path='/adminquestionedit/:id' element={<AdminEditQuestion/>}/>
     <Route path='/adminarticlesedit/:id' element={<ArticleEdit/>}/>
     <Route path='/adminreport' element={<AdminReport/>}/> 
+    <Route path='/admininsight' element={<Insight/>}/> 
     <Route path='/adminaddquestion' element={<AdminAddQuestion/>}/> 
     <Route path='/adminquestion' element={<AdminQuestion/>}/> 
     <Route path='/adminarticle' element={<Adminarticle/>}/> 

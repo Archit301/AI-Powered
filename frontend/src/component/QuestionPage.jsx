@@ -1,111 +1,70 @@
-import React, { useState } from "react";
-import { ThumbsUp, ThumbsDown, User, MessageCircle } from "react-feather";
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 const QuestionPage = () => {
-  const [upvotes, setUpvotes] = useState(125);
-  const [downvotes, setDownvotes] = useState(10);
-  const [comments, setComments] = useState([
-    { id: 1, user: "Alice", text: "I had a similar question about this topic." },
-    { id: 2, user: "Bob", text: "This explanation is very helpful, thanks!" },
-  ]);
+  const [questions, setQuestions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const addComment = (comment) => setComments([...comments, comment]);
+  // Fetch list of questions from the API
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('/api/questions/');
+        if (!response.ok) {
+          throw new Error('Failed to fetch questions');
+        }
+        const data = await response.json();
+        setQuestions(data);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchQuestions();
+  }, []);
+
+  // Loading and error handling
+  if (loading) return <div>Loading questions...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="container mx-auto p-6 space-y-8">
-      {/* Question Header */}
-      <header className="space-y-4 md:flex md:justify-between md:items-center md:space-y-0">
-        <h1 className="text-3xl font-bold text-gray-800">How does AI impact the job market?</h1>
-        <div className="flex items-center space-x-4">
-          <div className="flex items-center">
-            <User className="text-gray-500" />
-            <span className="ml-2 text-gray-700 font-semibold">Asked by John Doe</span>
-          </div>
-        </div>
-      </header>
+    <div className="container mx-auto px-6 py-12 mt-10">
+    <h2 className="text-4xl font-bold text-center mb-12 text-gray-800">Questions</h2>
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      {questions.map((question) => (
+        <div
+          key={question.id}
+          className="max-w-sm w-full bg-white shadow-md rounded-xl p-6 mb-6 transition-transform duration-300 hover:scale-105 hover:shadow-xl"
+        >
+          <Link to={`/question/${question._id}`} className="block">
+            <div className="flex flex-col items-center">
+              {/* Question title */}
+              <h3 className="text-2xl font-semibold text-gray-800 mb-3 text-center hover:text-blue-600 transition-colors duration-300">
+                {question.questionText}
+              </h3>
+  
+              {/* Question category */}
+              <p className="text-gray-500 text-sm text-center mb-2">Category: {question.category}</p>
+  
+              {/* Author name */}
+              <p className="text-gray-600 text-sm text-center mb-2">Author: {question.author.username}</p>
+              <p className="text-gray-600 text-sm text-center mb-4">CreatedAt: {new Date(question.createdAt).toLocaleDateString()}</p>
 
-      {/* Tags Section */}
-      <div className="flex flex-wrap gap-2">
-        <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm">AI</span>
-        <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm">Jobs</span>
-        <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm">Technology</span>
-      </div>
-
-      {/* Voting and Description Section */}
-      <div className="space-y-4 md:flex md:space-y-0 md:space-x-6">
-        {/* Voting Section */}
-        <div className="flex md:flex-col md:items-center space-x-4 md:space-x-0 md:space-y-2 text-gray-600">
-          <button
-            onClick={() => setUpvotes(upvotes + 1)}
-            className="flex items-center space-x-1 hover:text-blue-600"
-          >
-            <ThumbsUp />
-            <span>{upvotes}</span>
-          </button>
-          <button
-            onClick={() => setDownvotes(downvotes + 1)}
-            className="flex items-center space-x-1 hover:text-red-600"
-          >
-            <ThumbsDown />
-            <span>{downvotes}</span>
-          </button>
-        </div>
-
-        {/* Question Description */}
-        <div className="text-gray-700 md:flex-1">
-          <p>
-            Artificial Intelligence (AI) has profound implications for the future of work. As AI technology continues to
-            advance, it could lead to a shift in job roles, with repetitive tasks increasingly being automated...
-          </p>
-        </div>
-      </div>
-
-      {/* Comments Section */}
-      <section className="space-y-4">
-        <h2 className="text-2xl font-semibold text-gray-800">Comments</h2>
-        <div className="space-y-4">
-          {comments.map((comment) => (
-            <div key={comment.id} className="p-4 border rounded-lg">
-              <p className="text-gray-700 font-semibold">{comment.user}</p>
-              <p className="text-gray-600">{comment.text}</p>
+              {/* View Details link */}
+              <p className="text-blue-500 font-semibold text-sm text-center hover:text-blue-700 transition-colors duration-300">
+                View Answers
+              </p>
             </div>
-          ))}
+          </Link>
         </div>
-        <AddComment onAddComment={addComment} />
-      </section>
+      ))}
     </div>
+  </div>
+  
   );
 };
-
-// Component for adding a new comment
-const AddComment = ({ onAddComment }) => {
-  const [newComment, setNewComment] = useState("");
-
-  const handleCommentSubmit = (e) => {
-    e.preventDefault();
-    if (newComment.trim()) {
-      onAddComment({ id: Date.now(), user: "You", text: newComment });
-      setNewComment("");
-    }
-  };
-
-  return (
-    <form onSubmit={handleCommentSubmit} className="flex flex-col space-y-2">
-      <textarea
-        value={newComment}
-        onChange={(e) => setNewComment(e.target.value)}
-        placeholder="Add a comment..."
-        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-        rows="3"
-      />
-      <button
-        type="submit"
-        className="self-end px-4 py-2 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600"
-      >
-        Post Comment
-      </button>
-    </form>
-  );
-};
-
 export default QuestionPage;

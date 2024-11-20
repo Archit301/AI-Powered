@@ -58,6 +58,35 @@ const articleSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: "User"
     }],
+    monthlyViews: [{
+        month: {
+            type: String, // Format: 'YYYY-MM'
+            required: true
+        },
+        count: {
+            type: Number,
+            default: 0
+        }}],
+   monthlyLikes: [{
+         month: {
+         type: String, // Format: 'YYYY-MM'
+        required: true
+         },
+         count: {
+         type: Number,
+         default: 0
+            }
+        }],
+    monthlyDislikes: [{
+            month: {
+                type: String, // Format: 'YYYY-MM'
+                required: true
+            },
+            count: {
+                type: Number,
+                default: 0
+            }
+        }]
 })
 
 export const Article=mongoose.model("Article",articleSchema)

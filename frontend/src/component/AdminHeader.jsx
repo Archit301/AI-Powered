@@ -8,7 +8,7 @@ const AdminHeader = () => {
     <header className="bg-gray-800 text-white p-4 shadow-lg rounded-b-lg">
       <div className="container mx-auto flex justify-between items-center">
         <div className="text-2xl font-bold">
-          <Link to="/" className="hover:text-blue-400 transition duration-200">
+          <Link to="/admindashboard" className="hover:text-blue-400 transition duration-200">
             Admin Dashboard
           </Link>
         </div>
@@ -19,8 +19,8 @@ const AdminHeader = () => {
           <Link to="/adminquestion" className="hover:text-blue-400 transition duration-200">
             Questions
           </Link>
-          <Link to="/admin/reports" className="hover:text-blue-400 transition duration-200">
-            Reports
+          <Link to="/admininsight" className="hover:text-blue-400 transition duration-200">
+            Insight
           </Link>
           <Link to="/admin/profile" className="hover:text-blue-400 transition duration-200">
             Profile

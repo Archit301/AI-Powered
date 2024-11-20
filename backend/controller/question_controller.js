@@ -44,7 +44,7 @@ export const answerQuestion = async (req, res) => {
 
 export const getAnswerbyUserId = async (req, res) => {
     try {
-        const questions = await Answer.find({question:req.params.id}).populate('question');
+        const questions = await Answer.find({question:req.params.id}).populate('author');
         res.status(200).json(questions);
     } catch (error) {
         res.status(500).json({ error: 'Failed to fetch questions' });
