@@ -86,11 +86,11 @@ function App() {
     <Route path='/author/:id' element={<AuthorProfile/>}/> 
     <Route path='/saved' element={<SavedArticles/>}/> 
     <Route path='/' element={<Homepage/>}/> 
+    <Route path='/article/:id' element={<ArticlePage/>}/> 
     <Route path='/authors' element={<Author/>}/>
     </Route>
     <Route  element={<PrivateRouteadmin/>}>
     <Route path='/admin/questions/view/:id' element={<AdminQuestionView/>}/>  
-    <Route path='/article/:id' element={<ArticlePage/>}/> 
     <Route path='/admin/profile' element={<ProfileSection/>}/> 
     <Route path='/adminquestionedit/:id' element={<AdminEditQuestion/>}/>
     <Route path='/adminarticlesedit/:id' element={<ArticleEdit/>}/>
