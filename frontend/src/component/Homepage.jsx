@@ -28,7 +28,7 @@ function Homepage() {
   const fetchRecommendedArticles = async () => {
     if (!currentUser) return;
     try {
-      const response = await fetch("/api/profile/6739065e9e3ba8f82b602960/recommend");
+      const response = await fetch(`/api/profile/${currentUser._id}/recommend`);
       if (response.ok) {
         const data = await response.json();
         setRecommendedArticles(data);
@@ -77,7 +77,7 @@ function Homepage() {
   const handleReadMore = async (articleId) => {
     try {
       // Update the view count
-      alert("hello")
+      // alert("hello")
       await axios.put(`/api/articles/view/${articleId}`);
       // Navigate to the article's detail page
       navigate(`/article/${articleId}` );
