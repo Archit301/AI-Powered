@@ -87,7 +87,7 @@ function Homepage() {
   };
 
   return (
-    <div className="bg-gray-100">
+    <div className="bg-gray-100 mt-10">
       {/* Hero Section */}
       <section className="bg-gray-800 text-white py-20 px-6 md:px-12 lg:px-24">
         <div className="max-w-5xl mx-auto text-center">
@@ -189,13 +189,13 @@ function Homepage() {
       </section>
 
       {/* Call to Action */}
-      <section className="bg-gray-800 text-white py-12 px-6 md:px-12 lg:px-24 text-center">
+      {/* <section className="bg-gray-800 text-white py-12 px-6 md:px-12 lg:px-24 text-center">
         <h2 className="text-3xl font-semibold mb-4">Ready to Share Your Knowledge?</h2>
         <p className="text-lg mb-6">Join the community and make an impact by sharing your expertise.</p>
         <button className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg transition duration-200">
           Join Now
         </button>
-      </section>
+      </section> */}
     </div>
   );
 }

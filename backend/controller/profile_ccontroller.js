@@ -460,3 +460,25 @@ export const getFilteredArticlesMonthlyLikeDislike = async (req, res) => {
         res.status(500).json({ message: 'Error retrieving filtered monthly likes and dislikes', error });
     }
 };
+
+
+
+export const TotalArticleandQuestion=async(req,res)=>{
+    try {
+        const {userId}=req.params;
+        const article=await Article.countDocuments({author:userId})
+        const question=await Question.countDocuments({author:userId})
+        if(!article && !question){
+            return res.status(200).json("No article and question found")
+        }
+        else if(article &&!question){
+        return res.status(200).json(article)  
+        }
+        else if(!article && question){
+            return res.status(200).json(question)  
+            }
+        res.status(200).json({question,article}) 
+    } catch (error) {
+        res.status(500).json({ error: 'Internal server error.' });  
+    }
+}

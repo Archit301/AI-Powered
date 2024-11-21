@@ -43,7 +43,7 @@ export default function Login() {
           if (data.role === "admin") {
             navigate('/admindashboard'); 
           } else {
-            navigate('/dashboard'); 
+            navigate('/'); 
           }
         } catch (error) {
         
@@ -131,7 +131,7 @@ export default function Login() {
             <div className="mt-4 flex items-center justify-between">
               <p className="text-gray-600">Don't have an account?</p>
               <NavLink
-                to="/signup"
+                to="/register"
                 className="text-blue-600 hover:text-blue-800 font-medium"
               >
                 Register

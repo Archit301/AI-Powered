@@ -40,7 +40,7 @@ export default function Signup() {
       if (data.role === "admin") {
         navigate('/admindashboard'); 
       } else {
-        navigate('/dashboard'); 
+        navigate('/'); 
       }
     } catch (error) {
       dispatch(signinFailure(error.message));
@@ -72,7 +72,7 @@ export default function Signup() {
   };
 
   return (
-    <div className="relative flex items-center justify-center min-h-screen bg-gray-50 sm:items-center">
+    <div className="relative flex items-center justify-center min-h-screen bg-gray-50 sm:items-center mt-10">
       <div className="w-full max-w-md p-6 mx-auto bg-white rounded-lg shadow-lg">
         <h2 className="text-3xl font-semibold text-center text-gray-700">Signup</h2>
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">

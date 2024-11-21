@@ -21,7 +21,7 @@ function Header() {
         </div>
 
         {/* Search Bar (Hidden on Mobile) */}
-        <div className="hidden md:flex items-center bg-gray-700 rounded-lg px-4 py-2 mx-4 w-1/2">
+        {/* <div className="hidden md:flex items-center bg-gray-700 rounded-lg px-4 py-2 mx-4 w-1/2">
           <input
             type="text"
             placeholder="Search articles, topics, or questions..."
@@ -30,7 +30,7 @@ function Header() {
           <button className="ml-2 text-gray-400 hover:text-white">
             <Search />
           </button>
-        </div>
+        </div> */}
 
         {/* Desktop Navigation Links */}
         <nav className="hidden md:flex space-x-6 text-lg">

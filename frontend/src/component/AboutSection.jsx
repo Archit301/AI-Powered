@@ -2,7 +2,7 @@ import React from "react";
 
 const AboutSection = () => {
   return (
-    <div className="container mx-auto p-6 space-y-12">
+    <div className="container mx-auto p-6 space-y-12 mt-12">
     {/* About Header */}
     <div className="text-center space-y-4">
       <h2 className="text-4xl font-bold text-gray-800">About Me</h2>

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { User } from "react-feather";
-import axios from "axios"; // Assuming you are using Axios for API calls
+import axios from "axios";
 import { useParams } from "react-router";
 import { useSelector } from "react-redux";
 
-const QuestionView = () => {
+const AdminQuestionView = () => {
   const { id } = useParams(); // Getting question ID from the URL
   const questionId = id;
   const { currentUser, error, loading } = useSelector((state) => state.user);
@@ -99,26 +99,8 @@ const QuestionView = () => {
       {/* Answers Section */}
       <section className="space-y-6">
         <h2 className="text-2xl font-semibold text-gray-800">Answers</h2>
-
-
-        <div className="bg-white p-6 rounded-lg shadow-lg">
-          <h3 className="text-xl font-semibold text-gray-800 mb-4">Post Your Answer</h3>
-          <form onSubmit={handleAnswerSubmit} className="space-y-4">
-            <textarea
-              value={newAnswer}
-              onChange={(e) => setNewAnswer(e.target.value)}
-              placeholder="Type your answer here..."
-              className="w-full p-4 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300 transition duration-200"
-              rows="5"
-            />
-            <button
-              type="submit"
-              className="w-full px-4 py-2 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 transition duration-200"
-            >
-              Post Answer
-            </button>
-          </form>
-        </div>
+        
+        {/* Conditionally render message if no answers */}
         {answers.length === 0 ? (
           <p className="text-gray-600 italic">No answers yet. Be the first to answer!</p>
         ) : (
@@ -140,12 +122,9 @@ const QuestionView = () => {
             ))}
           </div>
         )}
-
-        {/* Post Answer Form */}
-      
       </section>
     </div>
   );
 };
 
-export default QuestionView;
+export default AdminQuestionView;

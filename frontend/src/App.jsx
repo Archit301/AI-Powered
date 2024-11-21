@@ -2,7 +2,7 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
-import { BrowserRouter,Route,Router,Routes } from 'react-router-dom'
+import { BrowserRouter,Navigate,Route,Router,Routes } from 'react-router-dom'
 import Signup from './component/Signup'
 import Login from './component/Login'
 import Header from './component/Header'
@@ -30,6 +30,9 @@ import AuthorProfile from './component/AuthorProfile'
 import SavedArticles from './component/SavedArticles'
 import QuestionView from './component/QuestionView'
 import Insight from './component/Insight'
+import AdminQuestionView from './component/AdminQuestionView'
+import PrivateRouteuser from './component/PrivateRouteuser'
+import PrivateRouteadmin from './component/PrivateRouteadmin'
 
 
 function App() {
@@ -41,15 +44,39 @@ function App() {
     <>
     <BrowserRouter>
     <div className="flex flex-col min-h-screen"> 
-    {
-  currentUser?.role === "admin" ? <AdminHeader /> : <Header />}
+    {currentUser ? (
+      currentUser.role === "admin" ? <AdminHeader /> : <Header />
+    ) : null}
            {/* <Header />  */}
    {/* <AdminHeader/> */}
         <main className="flex-grow"> 
     <Routes>
+    <Route
+  path="/login"
+  element={
+    !currentUser ? (
+      <Login />
+    ) : currentUser.role === "admin" ? (
+      <Navigate to="/admindashboard" />
+    ) : (
+      <Navigate to="/" />
+    )
+  }
+/>
+<Route
+  path="/register"
+  element={
+    !currentUser ? (
+      <Signup />
+    ) : currentUser.role === "admin" ? (
+      <Navigate to="/admindashboard" />
+    ) : (
+      <Navigate to="/" />
+    )
+  }
+/>
+    <Route  element={<PrivateRouteuser/>}>
     <Route path='/articles' element={<ArticlesPage/>}/> 
-    <Route path='/register' element={<Signup/>}/> 
-    <Route path='/login' element={<Login/>}/> 
     <Route path='/detailed' element={<ArticleDetailPage/>}/>
     <Route path='/questions' element={<QuestionPage/>}/>  
     <Route path='/question/:id' element={<QuestionView/>}/> 
@@ -59,7 +86,10 @@ function App() {
     <Route path='/author/:id' element={<AuthorProfile/>}/> 
     <Route path='/saved' element={<SavedArticles/>}/> 
     <Route path='/' element={<Homepage/>}/> 
-    <Route path='/authors' element={<Author/>}/> 
+    <Route path='/authors' element={<Author/>}/>
+    </Route>
+    <Route  element={<PrivateRouteadmin/>}>
+    <Route path='/admin/questions/view/:id' element={<AdminQuestionView/>}/>  
     <Route path='/article/:id' element={<ArticlePage/>}/> 
     <Route path='/admin/profile' element={<ProfileSection/>}/> 
     <Route path='/adminquestionedit/:id' element={<AdminEditQuestion/>}/>
@@ -72,6 +102,7 @@ function App() {
     <Route path='/admindashboard' element={<AdminDashboard/>}/> 
     <Route path='/adminarticleview/:id' element={<AdminArticleView/>}/> 
     <Route path='/createarticle' element={<CreateArticleForm/>}/> 
+    </Route>
       </Routes>
        </main> 
       </div>

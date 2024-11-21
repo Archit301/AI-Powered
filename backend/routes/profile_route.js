@@ -1,5 +1,5 @@
 import express from "express"
-import { getAdminArticleStats,getAdminCommentCount,getAdminFollowers, getFilteredArticles, getFilteredArticlesMonthlyLikeDislike, getFilteredArticlesMonthlyView, getPopularContent, getsavedarticle, getsavedarticlebyid, getUserProfile, savedArticle, topics, unsavedArticle } from "../controller/profile_ccontroller.js";
+import { getAdminArticleStats,getAdminCommentCount,getAdminFollowers, getFilteredArticles, getFilteredArticlesMonthlyLikeDislike, getFilteredArticlesMonthlyView, getPopularContent, getsavedarticle, getsavedarticlebyid, getUserProfile, savedArticle, topics, TotalArticleandQuestion, unsavedArticle } from "../controller/profile_ccontroller.js";
 
 const router=express.Router()
 
@@ -16,4 +16,5 @@ router.get('/:userId/recommend',getFilteredArticles );
 router.get("/:topics/category",topics)
 router.get("/filtered-views/:year/:month/:author",getFilteredArticlesMonthlyView)
 router.get("/filtered-likes/:year/:month/:author",getFilteredArticlesMonthlyLikeDislike)
+router.get('/:userId/totalarticle', TotalArticleandQuestion);
 export default router

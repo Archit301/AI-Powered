@@ -94,7 +94,7 @@ const handleSignOut = async () => {
   }
 };
   return (
-    <div className='p-3 max-w-lg mx-auto bg-gradient-to-r from-blue-50 to-indigo-100'>
+    <div className='p-3 max-w-lg mx-auto bg-gradient-to-r from-blue-50 to-indigo-100 mt-10'>
     <h1 className='text-3xl font-semibold text-center my-7'>Profile</h1>
     <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
     <input

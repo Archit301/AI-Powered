@@ -8,6 +8,8 @@ const AdminDashboard = () => {
   const [totalFollowers, setTotalFollowers] = useState(0);
   const [popularArticles, setPopularArticles] = useState([]);
   const [popularQuestions, setPopularQuestions] = useState([]);
+  const [totalQuestions, setTotalQuestions] = useState(0); // New state for total questions
+  const [totalArticles, setTotalArticles] = useState(0);
   const { currentUser, error, loading } = useSelector((state) => state.user);
   
   // Fetch data from APIs
@@ -34,6 +36,12 @@ const AdminDashboard = () => {
       const popularData = await popularRes.json();
       setPopularArticles(popularData.popularArticle ? [popularData.popularArticle] : []);
       setPopularQuestions(popularData.popularQuestion ? [popularData.popularQuestion] : []);
+
+
+      const totalArticleRes = await fetch(`/api/profile/${currentUser._id}/totalarticle`);
+      const totalArticleData = await totalArticleRes.json();
+      setTotalQuestions(totalArticleData.question); // Set the total questions
+      setTotalArticles(totalArticleData.article); 
 
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -76,10 +84,25 @@ const AdminDashboard = () => {
             <p className="text-lg">Total Comments: <span className="font-semibold">{totalComments}</span></p>
             <p className="text-lg">Total Views: <span className="font-semibold">{stats.totalViews}</span></p>
           </div>
+          
+
+          <div className="bg-gradient-to-br from-indigo-500 to-blue-600 text-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition duration-300">
+            <h3 className="text-2xl font-bold mb-4">Total Questions</h3>
+            <p className="text-lg">Total Questions: <span className="font-semibold">{totalQuestions}</span></p>
+          </div>
+
+          {/* Total Articles */}
+          <div className="bg-gradient-to-br from-red-500 to-yellow-600 text-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition duration-300">
+            <h3 className="text-2xl font-bold mb-4">Total Articles</h3>
+            <p className="text-lg">Total Articles: <span className="font-semibold">{totalArticles}</span></p>
+          </div>
 
 
+      
 
-          <section className="py-12 px-6 md:px-12 lg:px-24 flex justify-center">
+
+        </div>
+        <section className="py-12 px-6 md:px-12 lg:px-24 flex justify-center">
   <div className="w-full max-w-7xl">
     <h2 className="text-3xl font-semibold text-center mb-6">Popular Articles</h2>
     <div className="relative">
@@ -106,9 +129,6 @@ const AdminDashboard = () => {
     </div>
   </div>
 </section>
-
-
-        </div>
       </main>
     </div>
   );
